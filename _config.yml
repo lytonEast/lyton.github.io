@@ -7,9 +7,9 @@
 title: NexT
 subtitle:
 description:
-author: John Doe
+author: lyton
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
-language: en
+language:  zh-Hans
 date_format: '%Y-%m-%d'
 
 # URL
@@ -715,5 +715,9 @@ version: 5.1.1
   - jekyll-assets
   - jekyll-minifier
 
+<<<<<<< HEAD
+theme: jekyll-theme-cayman
+>>>>>>> cfb6294a89d2cbc7cdc4a4d525b722d781597ac8
+=======
 theme: jekyll-theme-cayman
 >>>>>>> cfb6294a89d2cbc7cdc4a4d525b722d781597ac8
