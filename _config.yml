@@ -65,8 +65,6 @@ postPatterns: 'circuitBoard'
 sns:
   email: '1021032774@qq.com'
   weibo: '//weibo.com/lovecolcol'
-  juejin: '//juejin.im/user/57a6f434165abd006159b4cc'
-  instagram: '//www.instagram.com/steveliaocn'
   github: '//lytoneast.github.io'
 
 # Tags 设置标签
