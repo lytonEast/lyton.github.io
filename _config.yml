@@ -1,7 +1,7 @@
 # Site settings 配置站点
 title: 'lyton博客'
 description: '明明是一只飞不快的鸟，确总想飞在队伍头'
-keyword: '什么都不精的rookie'
+keyword: '什么都不精的Rookie'
 url: 'https://lytoneast.github.io' # your host
 
 # if you don't need baseurl, you should leave this value blank.
@@ -17,9 +17,9 @@ footer:
   since: 2017
 
 # Author 配置博主信息
-author: '廖柯宇'
-nickname: '悟空'
-bio: '前端开发者，热爱技术&设计，简单乐观爱创造'
+author: 'lyton'
+nickname: 'Rookie'
+bio: '热爱生活，热爱运动'
 avatar: '/assets/img/profile.png'
 
 # Search
@@ -63,11 +63,11 @@ postPatterns: 'circuitBoard'
 
 # SNS settings 配置社交网站url: email, weibo, zhihu, twitter, instagram, juejin, github, douban, facebook, dribble, uicn, jianshu, medium, linkedin
 sns:
-  email: 'mailto:ray.eldath@aol.com'
+  email: '1021032774@qq.com'
   weibo: '//weibo.com/lovecolcol'
   juejin: '//juejin.im/user/57a6f434165abd006159b4cc'
   instagram: '//www.instagram.com/steveliaocn'
-  github: '//github.com/kaeyleo'
+  github: '//lytoneast.github.io'
 
 # Tags 设置标签
 recommend-tags: true # whether or not display recommend-tags on the sidebar
