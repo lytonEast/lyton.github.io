@@ -1,0 +1,201 @@
+layout: post
+title: BlockChain学习
+date: 2018-03-28
+author: lyton
+cover:
+tags: blockchain，ERC721
+---
+> 什么是ERC721，大家应该已经听说过以太坊发布的一款游戏，以太猫，由于其独特的设计风格和创意在以太坊网络中表现非凡，每只猫表现出与众不同的风格，具有收藏价值。ERC作为非同质代币标准，它更大的想象空间在于将物理世界的资产映射到区块链上。
+> 同质－－拥有后述属性的某个食物（例如金钱和商品）：在支付债务或结算时，某些部分或数量可以被另外一个同等部分或数量所代替。同质性实质上是资产（或者本文中的代币）的一种特性，其决定在交易或实用过程中同等或相似类型的物品或数量是否可以完全互换。
+
+### ERC721是什么
+ERC721和ERC20相同，它是一种代币标准，ERC721官网的代币标准为Non－Fungible Tokens，简称为NFTs，被广泛翻译成非同质代币。本文的开头讲述同质的概念，非同质本人的理解为，在结算或支付时，此代币的价值不可被一定数量或部分种类的商品所代替。
+> ERC721是由Dieter Shirley 在2017年9月提出。Dierer Shirley是Axiom Zen的技术总监。因此CryptoKitties实现了ERC721标准的去中心化应用。
+
+### CryptoKitties
+CryptoKitties是一款数字“撸猫”的游戏，主角是一帮名叫CryptoKitty的小可爱，我们去收集并且养育它们，每只猫都具有独语无二的特性，在你不想出售的前提下，每只猫都属于你，否则它们是不会被替代的，或者销毁，同时通过两只稀有属性的猫繁殖出独一无二的后代。ERC20的代币标准可以被替换，属于同质货币标准，且代币被细分为N份，但是ERC721的Token只允许最小的单位为1，无法分割。
+> 如果在一个集合的两个物品具有不同的特征，这两个物品是非同质的，而同质是某个部分或数量可以被另外一个同等部分或数量所代替。
+
+在本文的开头，提到将物理世界的资产映射到区块链上，利用ERC721合约。生活中有很多应用场景，其中包括，宠物店的宠物，每一件有价值的收藏品。
+```go
+pragma solidity ^0.4.20;
+
+/// @title ERC-721 Non-Fungible Token Standard
+/// @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+///  Note: the ERC-165 identifier for this interface is 0x80ac58cd
+interface ERC721 /* is ERC165 */ {
+    /// @dev This emits when ownership of any NFT changes by any mechanism.
+    ///  This event emits when NFTs are created (`from` == 0) and destroyed
+    ///  (`to` == 0). Exception: during contract creation, any number of NFTs
+    ///  may be created and assigned without emitting Transfer. At the time of
+    ///  any transfer, the approved address for that NFT (if any) is reset to none.
+    event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
+
+    /// @dev This emits when the approved address for an NFT is changed or
+    ///  reaffirmed. The zero address indicates there is no approved address.
+    ///  When a Transfer event emits, this also indicates that the approved
+    ///  address for that NFT (if any) is reset to none.
+    event Approval(address indexed _owner, address indexed _approved, uint256 _tokenId);
+
+    /// @dev This emits when an operator is enabled or disabled for an owner.
+    ///  The operator can manage all NFTs of the owner.
+    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
+
+    /// @notice Count all NFTs assigned to an owner
+    /// @dev NFTs assigned to the zero address are considered invalid, and this
+    ///  function throws for queries about the zero address.
+    /// @param _owner An address for whom to query the balance
+    /// @return The number of NFTs owned by `_owner`, possibly zero
+    function balanceOf(address _owner) external view returns (uint256);
+    /// @notice Find the owner of an NFT
+    /// @dev NFTs assigned to zero address are considered invalid, and queries
+    ///  about them do throw.
+    /// @param _tokenId The identifier for an NFT
+    /// @return The address of the owner of the NFT
+    function ownerOf(uint256 _tokenId) external view returns (address);
+
+    /// @notice Transfers the ownership of an NFT from one address to another address
+    /// @dev Throws unless `msg.sender` is the current owner, an authorized
+    ///  operator, or the approved address for this NFT. Throws if `_from` is
+    ///  not the current owner. Throws if `_to` is the zero address. Throws if
+    ///  `_tokenId` is not a valid NFT. When transfer is complete, this function
+    ///  checks if `_to` is a smart contract (code size > 0). If so, it calls
+    ///  `onERC721Received` on `_to` and throws if the return value is not
+    ///  `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`.
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    /// @param data Additional data with no specified format, sent in call to `_to`
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable;
+    /// @notice Transfers the ownership of an NFT from one address to another address
+    /// @dev This works identically to the other function with an extra data parameter,
+    ///  except this function just sets data to ""
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
+
+    /// @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
+    ///  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
+    ///  THEY MAY BE PERMANENTLY LOST
+    /// @dev Throws unless `msg.sender` is the current owner, an authorized
+    ///  operator, or the approved address for this NFT. Throws if `_from` is
+    ///  not the current owner. Throws if `_to` is the zero address. Throws if
+    ///  `_tokenId` is not a valid NFT.
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
+
+    /// @notice Set or reaffirm the approved address for an NFT
+    /// @dev The zero address indicates there is no approved address.
+    /// @dev Throws unless `msg.sender` is the current NFT owner, or an authorized
+    ///  operator of the current owner.
+    /// @param _approved The new approved NFT controller
+    /// @param _tokenId The NFT to approve
+    function approve(address _approved, uint256 _tokenId) external payable;
+
+    /// @notice Enable or disable approval for a third party ("operator") to manage
+    ///  all of `msg.sender`'s assets.
+    /// @dev Emits the ApprovalForAll event
+    /// @param _operator Address to add to the set of authorized operators.
+    /// @param _approved True if the operators is approved, false to revoke approval
+    function setApprovalForAll(address _operator, bool _approved) external;
+    /// @notice Get the approved address for a single NFT
+    /// @dev Throws if `_tokenId` is not a valid NFT
+    /// @param _tokenId The NFT to find the approved address for
+    /// @return The approved address for this NFT, or the zero address if there is none
+    function getApproved(uint256 _tokenId) external view returns (address);
+
+    /// @notice Query if an address is an authorized operator for another address
+    /// @param _owner The address that owns the NFTs
+    /// @param _operator The address that acts on behalf of the owner
+    /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+}
+
+interface ERC165 {
+    /// @notice Query if a contract implements an interface
+    /// @param interfaceID The interface identifier, as specified in ERC-165
+    /// @dev Interface identification is specified in ERC-165. This function
+    ///  uses less than 30,000 gas.
+    /// @return `true` if the contract implements `interfaceID` and
+    ///  `interfaceID` is not 0xffffffff, `false` otherwise
+    function supportsInterface(bytes4 interfaceID) external view returns (bool);
+}
+
+```
+* balanceof()：返回_owner持有的NFTs的数量。</br>
+* ownerOf():返回tokenid代币持有者的地址
+* approve():授权地址_to具有_tokenid的控制权，方法成功后需触发Approval事件
+* setApprovalForAll()：授予地址_operator具有所有NTFs的控制权，成功后需出发ApprovalForAll事件
+* getApproved(),isApprovedForAll():用来查询授权。
+* safeTransferFrom():转移NFT所有权，一次成功的转移操作必须发起Transer事件。函数的实现需要做一下几种检查
+* transferFrom():用来转移NFTs,方法成功后需触发Transfer事件。调用者自己确认_ti地址能正常接收NFT，否则将丢失此NFT。此函数实现时需要检查上边条件的前四条。
+
+### ERC165标准
+ERC721标准同时必须满足ERC165标准，其接口如下：
+```go
+interface ERC165{
+  function supportsInterface(bytes4 interfaceID) external view returns(bool);
+}
+```
+ERC165同样是一个合约标准，这个标准要求合约提供其实现了哪些接口，与合约交互时先进行查询.
+
+### 可选实现接口：ERC721Metadata
+ERC721Metadata接口用于提供合约的元数据：name，symbol和URI（NFT对应的资源）.其接口定义如下：
+```go
+interface ERC721Metadata /* is ERC721*/{
+  function name() external pure returns(string _name);
+  function symbol() external pure returns(string _symbol);
+  function tokenURI(uint256 _tokenId) external view returns(string);
+}
+```
+接口说明：
+* name():返回合约名字
+* symbol():返回合约代笔符号
+* tokenURI():返回_tokenId所对应的外部资源文件的URI（通常IPFS或HTTP路径）。外部资源文件需要包含的名字、描述、图片其格式如下：
+```
+{
+    "title": "Asset Metadata",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Identifies the asset to which this NFT represents",
+        },
+        "description": {
+            "type": "string",
+            "description": "Describes the asset to which this NFT represents",
+        },
+        "image": {
+            "type": "string",
+            "description": "A URI pointing to a resource with mime type image/* representing the asset to which this NFT represents. Consider making any images at a width between 320 and 1080 pixels and aspect ratio between 1.91:1 and 4:5 inclusive.",
+        }
+    }
+}
+```
+tokenURI通常是被web3调用，以便在应用层做相应的查询和展示。
+
+### 可选实现接口：ERC721Enumerable
+ERC721Enumerable的主要目的是提高合约中NFT的可访问性，其接口定义如下：
+```go
+interface ERC721Enumerable /* is ERC721 */ {
+    function totalSupply() external view returns (uint256);
+    function tokenByIndex(uint256 _index) external view returns (uint256);
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256);
+}
+```
+接口说明：
+* totalSupply():返回NFT总量
+* tokenByIndex():通过索引返回对应的tokenId
+* tokenOfOwnerByIndex():所有者可以一次拥有多个的NFT，此函数返回_owner拥有的NFT列表中对应索引的tokenid。
+
+### NTF IDs
+NTF ID,即tokenid，在合约中用唯一的uint265进行标识，每一个NTF的id在智能合约的生命周期内不允许改变。推荐的实现方式：
+* 从0开始，每新加一个NFT。NFT ID加1
+* 使用sha3后uuid转换为NTF ID
+
+### 参考文献
+* EIPS－165
+* EIPS－721
