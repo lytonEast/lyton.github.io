@@ -1,5 +1,5 @@
 ---
-layout: posts
+layout: post
 title: BlockChain学习
 date: 2018-03-28
 author: lyton
