@@ -1,8 +1,7 @@
-layout: post
+layout: posts
 title: BlockChain学习
 date: 2018-03-28
 author: lyton
-cover:
 tags: blockchain，ERC721
 ---
 > 什么是ERC721，大家应该已经听说过以太坊发布的一款游戏，以太猫，由于其独特的设计风格和创意在以太坊网络中表现非凡，每只猫表现出与众不同的风格，具有收藏价值。ERC作为非同质代币标准，它更大的想象空间在于将物理世界的资产映射到区块链上。
