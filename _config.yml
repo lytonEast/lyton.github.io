@@ -42,8 +42,8 @@ comments:
 reward:
   enable: Flase
   reward_comment: '真诚赞赏 手有余香'
-  wechatpay: 'http://ray-eldath.image.alimmdn.com/basic/wechatpay.jpg'
-  alipay: 'http://ray-eldath.image.alimmdn.com/basic/alipay.jpg'
+  wechatpay: ''
+  alipay: ''
 
 # b2t 回到顶部 by Ray-Eldath
 b2t: true
