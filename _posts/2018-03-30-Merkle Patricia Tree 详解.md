@@ -52,3 +52,33 @@ Merkle树是由计算机科学家Ralph Merkle在很多年前提出并由此命�
 当存在一个节点，其key值的内容比较长，当树中没有与之对应的前缀分支时，为了存储该节点，需要创建许多非叶子节点来存储路径，造成存储空间浪费。
 
 ### MPT结构设计
+通过上述部分，前缀树可以通过key－value维护，但是其具有明显的局限性。无论是查询操作，还是对应数据的增删改查，效率低下，浪费存储空间。所以在以太坊中，为MPT新增不同的类型的树节点，压缩书的高度，降低复杂度。
+
+MPT树中可以将树节点分为以下四类：
+* 空节点
+* 分支节点
+* 叶子节点
+* 扩展节点
+
+###### 分支节点
+分支节点用来表示MPT树中多有拥有超过1个孩子节点以上的非叶子节点，其定义如下：
+```go
+type fullNode struct {
+        Children [17]node // Actual trie node data to encode/decode (needs custom encoder)
+        flags    nodeFlag
+}
+
+// nodeFlag contains caching-related metadata about a node.
+type nodeFlag struct {
+    hash  hashNode // cached hash of the node (may be nil)
+    gen   uint16   // cache generation counter
+    dirty bool     // whether the node has changes that must be written to the database
+}
+```
+与前缀树相同，MPT同样是把Key－value数据项的key编码在树的路径中，但是key的每一个字节值的范围太大（［0-127］），因此在以太坊中，操作树之前，利用key编码的转换，将一个子节点高低四位内容分拆成两个字节存储。编码转换后，key‘的每一位的值范围都在［0，15］内。因此，一个分支节点的孩子至多只有16个。以太坊通过此方式，减少每个分支节点的容量，但实在一定程度上增加了树高。
+分支节点的孩子列表中，最后一个元素是用来存储自身的内容。此外，每个分支节点会有一个附带的字段nodeFlag，记录一些辅助数据：
+* 节点哈希：若该字段不为空，则当需要进行哈希计算时，可以跳过计算过程而直接使用上次计算的结果（当节点变脏时，该字段置空）
+* 脏标志：当节点被修改时，该标志被置为1
+* 诞生标志：当该节点第一次被载入内存中（或被修改时），会被赋予一个计数值作为诞生标志，该标志会被作为节点驱逐的依据，清除内存中“old”节点，节省内存资源。
+
+###### 叶节点&&扩展节点
